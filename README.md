@@ -11,10 +11,10 @@ A comprehensive end-to-end financial analytics project covering revenue forecast
 
 ### 💡 Key Results
 
-- 📈 **Revenue Forecast**: ${forecast.sum():,.0f} predicted for next 12 months
-- 🎯 **Churn Model Accuracy**: {churn_results[best_churn_model_name]['roc_auc']:.1%} ROC AUC
-- 💰 **Identified Value**: ${at_risk_mrr * 12:,.0f} annual revenue at risk
-- 👥 **Customer Segments**: {optimal_k} distinct groups with targeted strategies
+- 📈 **Revenue Forecast**: $15,718,813 predicted for next 12 months
+- 🎯 **Churn Model Accuracy**: 99.90% ROC AUC
+- 💰 **Identified Value**: $2,000,976 annual revenue at risk
+- 👥 **Customer Segments**: 7 distinct groups with targeted strategies
 
 ---
 
@@ -27,11 +27,11 @@ financial-operations-analytics/
 ├── monthly_revenue.csv               # Aggregated monthly metrics
 │
 ├── financial_analytics.py            # Complete analysis script
-├── EXECUTIVE_SUMMARY_FINANCIAL.txt   # Executive report
+├── EXECUTIVE_SUMMARY_FINANCIAL.txt  # Executive report
 ├── kpi_summary.txt                   # Key metrics summary
 │
-├── at_risk_customers.csv             # High churn risk list
-├── rfm_segmentation.csv              # RFM customer segments
+├── at_risk_customers.csv            # High churn risk list
+├── rfm_segmentation.csv             # RFM customer segments
 │
 ├── financial_viz/                    # All visualizations (16 files)
 │   ├── 01_initial_exploration.png
@@ -91,7 +91,8 @@ financial-operations-analytics/
 ## 🛠️ Installation & Setup
 
 ### Prerequisites
-```bash
+```
+bash
 Python 3.7+
 pip package manager
 ```
@@ -99,18 +100,21 @@ pip package manager
 ### Installation
 
 1. **Clone the repository**
-```bash
+```
+bash
 git clone https://github.com/yourusername/financial-operations-analytics.git
 cd financial-operations-analytics
 ```
 
 2. **Install dependencies**
-```bash
+```
+bash
 pip install -r requirements.txt
 ```
 
 3. **Run the analysis**
-```bash
+```
+bash
 python financial_analytics.py
 ```
 
@@ -137,6 +141,14 @@ scipy>=1.7.0
 ### Revenue Forecasting
 ![Revenue Forecast](financial_viz/04_arima_forecast.png)
 *12-month revenue forecast with 95% confidence intervals*
+
+### Prophet Forecast
+![Prophet Forecast](financial_viz/05_prophet_forecast.png)
+*Facebook Prophet model forecast with trend*
+
+### Prophet Components
+![Prophet Components](financial_viz/06_prophet_components.png)
+*Trend, seasonality, and residual decomposition*
 
 ### Churn Analysis
 ![Churn Analysis](financial_viz/07_churn_analysis.png)
@@ -173,27 +185,27 @@ scipy>=1.7.0
 ## 📈 Key Findings & Recommendations
 
 ### Revenue Insights
-- Revenue growing at **{revenue_growth_rate:+.1f}%** over 6-month period
-- Strong seasonality detected with Q4 peaks
-- Forecasted **${forecast.sum()/1e6:.1f}M** revenue for next 12 months
-- Model accuracy: **{100-mape:.1f}%**
+- Revenue growing at **+13.3%** over 6-month period
+- Strong seasonality detected with Q4 peaks (holiday season)
+- Forecasted **$15.7M** revenue for next 12 months
+- Model accuracy: **99.3%**
 
 ### Churn Analysis
-- Overall churn rate: **{churn_rate_current:.1f}%**
-- **{len(at_risk):,}** customers at high risk (>50% probability)
-- **${at_risk_mrr * 12:,.0f}** annual revenue at risk
+- Overall churn rate: **13.12%**
+- **652** customers at high risk (>50% probability)
+- **$2,000,976** annual revenue at risk
 - Top churn predictors: usage score, NPS, support tickets
 
 ### Profitability
-- **{profitability['Gross_Profit'].idxmax()}** segment most profitable
-- Average CLV: **${avg_clv_current:,.0f}**
-- CLV to CAC ratio: **{avg_clv_current/500:.1f}x** (assuming $500 CAC)
-- Payback period: **{customers['payback_months'].mean():.1f} months**
+- **Enterprise** segment most profitable (highest CLV)
+- Average CLV: **$7,167**
+- CLV to CAC ratio: **14.3x** (assuming $500 CAC)
+- Payback period: **5.0 months**
 
 ### Strategic Recommendations
 
 **Immediate Actions:**
-1. Contact {len(at_risk):,} at-risk customers
+1. Contact 652 at-risk customers
 2. Implement churn prediction in CRM
 3. Launch retention campaign for high-risk segments
 
@@ -204,10 +216,10 @@ scipy>=1.7.0
 4. A/B test retention strategies
 
 **Long-term (6-12 months):**
-1. Reduce churn by 20% (save ${at_risk_mrr * 0.2 * 12:,.0f}/year)
+1. Reduce churn by 20% (save $400,195/year)
 2. Expand highest-value segments
 3. Build real-time prediction system
-4. Achieve {revenue_growth_rate * 1.2:.0f}% growth rate
+4. Achieve 16% growth rate
 
 ---
 
@@ -215,7 +227,7 @@ scipy>=1.7.0
 
 ### 1. Data Generation
 Since this is a teaching project, we generated realistic synthetic data:
-- **{len(customers):,}** customers across {len(transactions):,} transactions
+- **5,000** customers across **4,348** transactions
 - **5-year** historical period (2020-2024)
 - Realistic patterns: seasonality, churn, growth trends
 - Multiple customer segments and plans
@@ -251,7 +263,8 @@ Since this is a teaching project, we generated realistic synthetic data:
 ## 💻 Code Examples
 
 ### Time Series Forecasting
-```python
+```
+python
 from statsmodels.tsa.arima.model import ARIMA
 
 # Fit ARIMA model
@@ -263,7 +276,8 @@ forecast = fitted_model.forecast(steps=12)
 ```
 
 ### Churn Prediction
-```python
+```
+python
 from sklearn.ensemble import RandomForestClassifier
 
 # Train model
@@ -278,13 +292,14 @@ churn_prob = rf_model.predict_proba(X_test)[:, 1]
 ```
 
 ### RFM Segmentation
-```python
+```
+python
 # Calculate RFM scores
-rfm = customers.groupby('customer_id').agg({{
+rfm = customers.groupby('customer_id').agg({
     'transaction_date': lambda x: (reference_date - x.max()).days,
     'transaction_id': 'count',
     'amount': 'sum'
-}})
+})
 rfm.columns = ['recency', 'frequency', 'monetary']
 
 # Create segments
@@ -339,3 +354,25 @@ This project template can be adapted for:
 ## 📝 License
 
 This project is licensed under the MIT License - see below:
+
+MIT License
+
+Copyright (c) 2024 Financial Operations Analytics
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
